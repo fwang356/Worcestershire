@@ -34,15 +34,19 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    if (listen(server, 3) < 0) {
-        cout << "Listen Error";
-        exit(EXIT_FAILURE);
+    while (true) {
+        if (listen(server, 3) < 0) {
+            cout << "Listen Error";
+            exit(EXIT_FAILURE);
+        }
+
+        new_socket = accept(server, (struct sockaddr *)&address, (socklen_t *)&addrlen);
+
+        if (new_socket < 0) {
+            cout << "Accept Error";
+            exit(EXIT_FAILURE);
+        }
     }
 
-    new_socket = accept(server, (struct sockaddr *)&address, (socklen_t *)&addrlen);
-
-    if (new_socket < 0) {
-        cout << "Accept Error";
-        exit(EXIT_FAILURE);
-    }
+    
 }
