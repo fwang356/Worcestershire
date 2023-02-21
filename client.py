@@ -3,11 +3,6 @@ import threading
 import sys 
 import argparse
 
-
-#TODO: Implement a client that connects to your server to chat with other clients here
-
-# Use sys.stdout.flush() after print statemtents
-
 def join(args):
 	if args.join:
 		host = args.host

@@ -4,10 +4,6 @@ import sys
 import argparse
 import time
 
-#TODO: Implement all code for your server here
-
-# Use sys.stdout.flush() after print statemtents
-
 def acceptNewClient(conn, addr):
 	data = conn.recv(1024).decode()
 
@@ -25,34 +21,35 @@ def acceptNewClient(conn, addr):
 		clients[addr] = conn
 		usernames[addr] = username
 
-		while True:
-			data = conn.recv(1024).decode()
-			if data == ":Exit":
-				msg = usernames[addr] + " left the chatroom"
-				print(msg)
-				sys.stdout.flush()
-				for client in clients:
-					if client != addr:
-						clients[client].sendto(msg.encode(), client)
-				break
+def startGame(conn, addr):
+	while True:
+		guess = conn.recv(1024).decode()
+		result = checkGuess(word, guess)
+
+		if result == "invalid":
+			result = "Please enter a valid word."
+		
+		conn.send(result.encode())
+			
+
+def checkGuess(word, guess):
+	result = ""
+	if guess not in guesses:
+		result = "invalid"
+	else:
+		for i in range(5):
+			if word[i] == guess[i]:
+				result += "G"
+			elif guess[i] in word:
+				result += "Y"
 			else:
-				if data == ":)":
-					data = "[feeling happy]"
-				elif data == ":(":
-					data = "[feeling sad]"
-				elif data == ":mytime":
-					data = time.ctime()
-				elif data == ":+1hr":
-					data = time.ctime(time.time() + 3600)
-				msg = usernames[addr] + ": " + data
-				print(msg)
-				sys.stdout.flush()
-				for client in clients:
-					if client != addr:
-						clients[client].sendto(msg.encode(), client)
+				result += "R"
+	return result
 
 if __name__ == "__main__":
 	host = "127.0.0.1"
+	word = "apple"
+	guesses = ["apple", "happy"]
 	clients = {}
 	usernames = {}
 
@@ -77,6 +74,7 @@ if __name__ == "__main__":
 		while True:
 			conn, addr = sock.accept()
 			threading.Thread(target=acceptNewClient, args=(conn, addr)).start()
+			threading.Thread(target=startGame, args=(conn, addr)).start()
 
 			"""
 			while True:
