@@ -47,7 +47,7 @@ def checkGuess(word, guess):
 	return result
 
 if __name__ == "__main__":
-	host = "127.0.0.1"
+	host = "143.215.55.155"
 	word = "apple"
 	guesses = ["apple", "happy"]
 	clients = {}
@@ -74,7 +74,7 @@ if __name__ == "__main__":
 		while True:
 			conn, addr = sock.accept()
 			threading.Thread(target=acceptNewClient, args=(conn, addr)).start()
-			threading.Thread(target=startGame, args=(conn, addr)).start()
+			#threading.Thread(target=startGame, args=(conn, addr)).start()
 
 			"""
 			while True:
